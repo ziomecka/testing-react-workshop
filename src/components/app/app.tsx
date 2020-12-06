@@ -1,7 +1,13 @@
-import { DEFAULT_HEADING, HeadingImage, MOCKED_ITEMS } from './consts';
+import { DEFAULT_HEADING, HeadingImage } from './consts';
 import { Highlight, List, ListProps, Search, SearchProps } from 'components';
-import React, { FunctionComponent, useCallback, useState } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { AppProps } from './types';
+import { fetchSearch } from 'api';
 
 const renderHighlighted = (query: string) => {
   const highlight: ListProps['render'] = (str) => (
@@ -17,6 +23,7 @@ export const App: FunctionComponent<AppProps> = (props) => {
     searchProps: { buttonProps = {}, inputProps = {} } = {},
   } = props;
 
+  const [items, setItems] = useState<ListProps['items']>(null);
   const [value, setValue] = useState<string>('');
 
   const onChange: SearchProps['inputProps']['onChange'] = useCallback(
@@ -26,9 +33,17 @@ export const App: FunctionComponent<AppProps> = (props) => {
       } = event;
 
       setValue(value);
+
+      const items = value
+        ? ((await fetchSearch(value)) as ListProps['items'])
+        : null;
+
+      setItems(items);
     },
     [],
   );
+
+  useEffect(() => !value && setItems(null), [value]);
 
   const onClick: SearchProps['buttonProps']['onClick'] = () => setValue('');
 
@@ -42,7 +57,7 @@ export const App: FunctionComponent<AppProps> = (props) => {
         buttonProps={{ ...buttonProps, onClick }}
         inputProps={{ ...inputProps, onChange, value }}
       />
-      <List items={MOCKED_ITEMS} render={renderHighlighted(value)} />
+      <List items={items} render={renderHighlighted(value)} />
     </main>
   );
 };
