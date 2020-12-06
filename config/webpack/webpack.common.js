@@ -34,8 +34,7 @@ module.exports = {
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       title: 'Testing Library React',
-      templateContent: () =>
-        `<h1>React Testing Workshop</h1><div id="${APP_ID}"></div>`,
+      templateContent: () => `<div id="${APP_ID}"></div>`,
     }),
     new webpack.DefinePlugin({
       'process.env': {
