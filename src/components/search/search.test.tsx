@@ -45,7 +45,7 @@ describe('Search', () => {
   });
 
   it('renders searched value', () => {
-    const { queryByRole } = render(<Search {...componentProps} />);
+    const { queryByRole, debug } = render(<Search {...componentProps} />);
 
     const input = queryByRole('textbox');
 
@@ -56,5 +56,7 @@ describe('Search', () => {
     fireEvent.change(input, { target: { value } });
 
     expect(input).toHaveValue(value);
+
+    debug(input);
   });
 });

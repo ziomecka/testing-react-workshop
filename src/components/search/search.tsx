@@ -7,6 +7,7 @@ import {
 } from './consts';
 
 import React, {
+  ChangeEventHandler,
   FormEventHandler,
   FunctionComponent,
   useCallback,
@@ -22,7 +23,7 @@ export const Search: FunctionComponent<SearchProps> = (props) => {
     inputProps: {
       id = DEFAULT_INPUT_ID,
       placeholder = DEFAULT_PLACEHOLDER,
-      value,
+      value = '',
       onChange,
     },
     buttonProps: { onClick, label = DEFAULT_BUTTON_LABEL },
@@ -33,6 +34,13 @@ export const Search: FunctionComponent<SearchProps> = (props) => {
   } = props;
 
   const [search, setSearch] = useState(value);
+
+  const onChangeHandler: ChangeEventHandler<HTMLInputElement> = (event) => {
+    event.preventDefault();
+
+    setSearch(event.target.value);
+    onChange(event);
+  };
 
   useEffect(() => setSearch(value), [value]);
 
@@ -46,7 +54,7 @@ export const Search: FunctionComponent<SearchProps> = (props) => {
       <input
         type="text"
         id={id}
-        onChange={onChange}
+        onChange={onChangeHandler}
         placeholder={placeholder}
         value={search}
       />
